@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Submit your OTP</title>
+</head>
+<body>
+<form action="#" method="post" th:action="@{/authenticate}" th:object="${otpSubmission}">
+  <label th:text="'Enter your OTP'"></label>
+  <input id="otp" type="text" th:field="*{otp}">
+  <input id="txn-id" type="text" th:field="*{txnId}" hidden>
+  <input type="submit"  value="Submit">
+</form>
+</body>
+</html>
