@@ -32,7 +32,7 @@ public class AppointmentChecker {
 
   @Autowired private ObjectMapper objectMapper;
 
-  @Scheduled(fixedDelay = 10000)
+  @Scheduled(fixedDelay = 60000)
   public void scheduleFixedDelayTask() {
     VaxCenters centers = appointment.cal(district, date + "-05-2021", holder.h());
     List<VaxCenter> vaxCenters =
