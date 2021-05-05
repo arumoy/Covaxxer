@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.annotation.Resource;
+import java.awt.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,8 +40,40 @@ public class AppointmentChecker {
             .filter(
                 f ->
                     f.getSessions().stream()
-                        .anyMatch(m -> m.getMin_age_limit() == 18 && m.getAvailable_capacity() > 1))
+                        .anyMatch(m -> m.getMin_age_limit() == 18 /*&& m.getAvailable_capacity() > 0*/))
             .collect(Collectors.toList());
-    LOGGER.info("{}", vaxCenters);
+    if (!vaxCenters.isEmpty()) {
+      if (SystemTray.isSupported()) {
+        StringBuilder builder = new StringBuilder();
+        vaxCenters.forEach(center -> {
+          builder.append(center.getName()).append('-').append(center.getPincode()).append(',');
+        });
+        try{
+          showWinPopUp(builder.toString());
+        } catch (AWTException e) {
+          LOGGER.error(e.getMessage());
+          LOGGER.info("Slot open at {}", builder);
+        }
+      }
+    }
+  }
+
+  private void showWinPopUp(String centers) throws AWTException {
+    //Obtain only one instance of the SystemTray object
+    SystemTray tray = SystemTray.getSystemTray();
+
+    //If the icon is a file
+    Image image = Toolkit.getDefaultToolkit().createImage("icon.png");
+    //Alternative (if the icon is on the classpath):
+    //Image image = Toolkit.getDefaultToolkit().createImage(getClass().getResource("icon.png"));
+
+    TrayIcon trayIcon = new TrayIcon(image, "Vaxx");
+    //Let the system resize the image if needed
+    trayIcon.setImageAutoSize(true);
+    //Set tooltip text for the tray icon
+    trayIcon.setToolTip("Book Vaccine Now");
+    tray.add(trayIcon);
+
+    trayIcon.displayMessage("Vaccine Notification", "Slot open @ " + centers, TrayIcon.MessageType.INFO);
   }
 }
