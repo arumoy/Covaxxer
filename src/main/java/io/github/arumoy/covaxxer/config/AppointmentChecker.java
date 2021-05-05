@@ -40,7 +40,7 @@ public class AppointmentChecker {
             .filter(
                 f ->
                     f.getSessions().stream()
-                        .anyMatch(m -> m.getMin_age_limit() == 18 /*&& m.getAvailable_capacity() > 0*/))
+                        .anyMatch(m -> m.getMin_age_limit() == 18 && m.getAvailable_capacity() > 0))
             .collect(Collectors.toList());
     if (!vaxCenters.isEmpty()) {
       if (SystemTray.isSupported()) {
