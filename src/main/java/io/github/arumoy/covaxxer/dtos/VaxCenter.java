@@ -17,14 +17,4 @@ public class VaxCenter {
     private String fee_type;
     private List<VaxFees> vaccine_fees;
     private List<VaxSessions> sessions;
-
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Name: ").append(name).append('\n');
-        builder.append("Address: ").append(address).append('\n');
-        builder.append("PIN: ").append(pincode).append('\n');
-        builder.append("Address: ").append(address).append('\n');
-        return super.toString();
-    }
 }

@@ -40,16 +40,19 @@ public class AppointmentChecker {
             .filter(
                 f ->
                     f.getSessions().stream()
-                        .anyMatch(m -> m.getMin_age_limit() == 18 && m.getAvailable_capacity() > 0))
+                        .anyMatch(m -> m.getMin_age_limit() == 18 && m.getAvailable_capacity() >= 1))
             .collect(Collectors.toList());
     if (!vaxCenters.isEmpty()) {
       if (SystemTray.isSupported()) {
         StringBuilder builder = new StringBuilder();
         vaxCenters.forEach(center -> {
-          builder.append(center.getName()).append('-').append(center.getPincode()).append(',');
+          builder.append(center.getName()).append('-').append(center.getPincode()).append(" on ");
+          center.getSessions().forEach(session -> builder.append(session.toString()));
+          builder.append(';');
         });
         try{
           showWinPopUp(builder.toString());
+          LOGGER.info("{}", builder);
         } catch (AWTException e) {
           LOGGER.error(e.getMessage());
           LOGGER.info("Slot open at {}", builder);
