@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.awt.*;
 import java.util.List;
@@ -23,7 +24,7 @@ public class AppointmentChecker {
   private static final Logger LOGGER = LoggerFactory.getLogger(AppointmentChecker.class);
   @Resource private TokenHolder holder;
 
-  @Value("${cowin.date}")
+  @Value("${cowin.ddmm}")
   private String date;
   @Value("${cowin.district}")
   private Integer district;
@@ -34,7 +35,7 @@ public class AppointmentChecker {
 
   @Scheduled(fixedDelay = 60000)
   public void scheduleFixedDelayTask() {
-    VaxCenters centers = appointment.cal(district, date + "-05-2021", holder.h());
+    VaxCenters centers = appointment.cal(district, date + "-2021", holder.h());
     List<VaxCenter> vaxCenters =
         centers.getCenters().stream()
             .filter(
@@ -78,5 +79,10 @@ public class AppointmentChecker {
     tray.add(trayIcon);
 
     trayIcon.displayMessage("Vaccine Notification", "Slot open @ " + centers, TrayIcon.MessageType.INFO);
+  }
+
+  @PostConstruct
+  private void logDate() {
+    LOGGER.info("Date: {}-2021", date);
   }
 }
